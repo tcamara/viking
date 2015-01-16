@@ -3,51 +3,55 @@ package com.timcamara.viking.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.timcamara.viking VikingGame;
+import com.timcamara.viking.VikingGame;
 
 public abstract class MenuScreen extends ScreenAdapter {
-    private Stage            stage;
-    private VikingGame       game;
-    private VikingGame.menus menu;
-    private Skin             button_skin;
-    private Table            table;
-
-    public MenuScreen(VikingGame game) {
-        this.game = game;
-        this.menu = menu;
-
-        button_skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-        stage = new Stage(game.viewport);
-        Gdx.input.setInputProcessor(stage);
-
+	protected VikingGame game;
+	protected Stage      stage;
+	protected Table      table;
+    protected Skin       skin;
+    
+    public MenuScreen(VikingGame viking_game) {
+        game  = viking_game;
+        stage = game.stage;
+        skin  = game.asset_manager.get("ui/uiskin.json", Skin.class);
+        
         table = createTable();
     }
-
-    public abstract void show;
-
+    
+    @Override
+    public void show() {
+        // Remove everything on the stage
+    	stage.clear();
+    	
+    	// Add this screen's table back in
+    	stage.addActor(table);
+    	
+    	// Make sure the stage is listening to input
+    	Gdx.input.setInputProcessor(stage);
+    }
+    
     public void startGame() {
         game.setScreen(game.game_screen);
         dispose();
     }
-
+    
     public void continueGame() {
         game.setScreen(game.game_screen);
         dispose();
     }
-
+    
     public void exitGame() {
         dispose();
         Gdx.app.exit();
     }
-
+    
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0,1);
@@ -57,7 +61,7 @@ public abstract class MenuScreen extends ScreenAdapter {
         stage.draw();
 
         if(VikingGame.dev_mode) {
-            Table.drawDebug(stage);
+            table.debugAll();
         }
     }
 
@@ -65,14 +69,8 @@ public abstract class MenuScreen extends ScreenAdapter {
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
-
-    @Override
-    public void dispose() {
-        button_skin.dispose();
-        stage.dispose();
-    }
-
-    public Table createTable() {
+    
+    protected Table createTable() {
         Table table = new Table();
         table.setFillParent(true);
 
@@ -83,16 +81,16 @@ public abstract class MenuScreen extends ScreenAdapter {
         return table;
     }
 
-    public Label createLabel(String text) {
-        Label label = new Label(text, button_skin);
+    protected Label createLabel(String text) {
+        Label label = new Label(text, skin);
 
         table.add(label).padBottom(10);
 
         return label;
     }
 
-    public void createButton(String text, InputListener inputListener) {
-        TextButton button = new TextButton(text, button_skin);
+    protected void createButton(String text, InputListener inputListener) {
+        TextButton button = new TextButton(text, skin);
 
         button.addListener(inputListener);
 
