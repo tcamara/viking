@@ -20,7 +20,7 @@ public abstract class MenuScreen extends ScreenAdapter {
     public MenuScreen(VikingGame viking_game) {
         game  = viking_game;
         stage = game.stage;
-        skin  = game.asset_manager.get("ui/uiskin.json", Skin.class);
+        skin  = game.assets.skin;
         
         table = createTable();
     }
@@ -35,21 +35,6 @@ public abstract class MenuScreen extends ScreenAdapter {
     	
     	// Make sure the stage is listening to input
     	Gdx.input.setInputProcessor(stage);
-    }
-    
-    public void startGame() {
-        game.setScreen(game.game_screen);
-        dispose();
-    }
-    
-    public void continueGame() {
-        game.setScreen(game.game_screen);
-        dispose();
-    }
-    
-    public void exitGame() {
-        dispose();
-        Gdx.app.exit();
     }
     
     @Override
@@ -70,30 +55,47 @@ public abstract class MenuScreen extends ScreenAdapter {
         stage.getViewport().update(width, height, true);
     }
     
+    public void startGame() {
+        game.setScreen(game.game_screen);
+        dispose();
+    }
+    
+    public void continueGame() {
+        game.setScreen(game.game_screen);
+        dispose();
+    }
+    
+    public void exitGame() {
+        dispose();
+        Gdx.app.exit();
+    }
+    
     protected Table createTable() {
         Table table = new Table();
         table.setFillParent(true);
-
+        
         if(VikingGame.dev_mode) {
             table.debug();
         }
-
+        
         return table;
     }
 
     protected Label createLabel(String text) {
         Label label = new Label(text, skin);
-
+        
         table.add(label).padBottom(10);
-
+        
         return label;
     }
 
-    protected void createButton(String text, InputListener inputListener) {
+    protected TextButton createButton(String text, InputListener inputListener) {
         TextButton button = new TextButton(text, skin);
-
+        
         button.addListener(inputListener);
-
+        
         table.add(button).pad(10);
+        
+        return button;
     }
 }

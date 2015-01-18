@@ -12,7 +12,6 @@ import com.timcamara.viking.systems.RenderSystem;
 public class GameScreen extends ScreenAdapter {
     private VikingGame      game;
     private Engine          engine;
-//    private World           world;
     private FPSLogger       fps;
 
     public GameScreen(VikingGame game) {
@@ -20,9 +19,6 @@ public class GameScreen extends ScreenAdapter {
 
         // Create the engine for the Ashley ECS
         engine = new Engine();
-        
-        // Create the world
-//        world = new World(engine);
         
         // Set up the systems
         start_systems();
@@ -34,7 +30,7 @@ public class GameScreen extends ScreenAdapter {
     }
     
     private void start_systems() {
-    	engine.addSystem(new RenderSystem(game.viewport));
+    	engine.addSystem(new RenderSystem(game));
         engine.addSystem(new MovementSystem());
     }
     

@@ -1,7 +1,6 @@
 package com.timcamara.viking;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -13,6 +12,7 @@ import com.timcamara.viking.screens.LevelWinMenuScreen;
 import com.timcamara.viking.screens.LoadingMenuScreen;
 import com.timcamara.viking.screens.PauseMenuScreen;
 import com.timcamara.viking.screens.TitleMenuScreen;
+import com.timcamara.viking.World;
 
 public class VikingGame extends Game {
 	// Used for debug output
@@ -34,11 +34,13 @@ public class VikingGame extends Game {
 	public GameLossMenuScreen  game_loss_screen;
 	public GameScreen          game_screen;
 	
-	// This gets reused for all MenuScreens
+	// This gets re-used for all screens
 	public Stage stage;
 	
-	// Asset manager stores all our loaded assets
-	public AssetManager asset_manager;
+	// This handles loading and storing all of our assets
+	public Assets assets;
+	
+	public World world;
 	
 	@Override
 	public void create () {
@@ -48,14 +50,20 @@ public class VikingGame extends Game {
 		viewport.apply(true);
 		
 		// Setup structure for the menu screens
-		asset_manager = new AssetManager();
-        stage         = new Stage(viewport);
+		assets = new Assets();
+        stage  = new Stage(viewport);
         
         // Bootstrap the assets for the loading screen
-        Assets.load_assets_for_loading(asset_manager);
+        assets.load_assets_loading();
 		
-		// Initialize screens
-        loading_screen    = new LoadingMenuScreen(this);
+		// Initialize loading screen
+        loading_screen = new LoadingMenuScreen(this);
+        setScreen(loading_screen);
+        
+        // Create the world
+        world = new World();
+        
+        // Initialize the other screens
         title_screen      = new TitleMenuScreen(this);
 		pause_screen      = new PauseMenuScreen(this);
 		level_win_screen  = new LevelWinMenuScreen(this);

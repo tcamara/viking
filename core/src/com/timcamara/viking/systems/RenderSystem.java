@@ -9,10 +9,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.timcamara.viking.VikingGame;
 import com.timcamara.viking.components.PositionComponent;
 import com.timcamara.viking.components.TextureComponent;
 
 public class RenderSystem extends IteratingSystem {
+	private VikingGame    game;
 	private Viewport      viewport;
 	private SpriteBatch   batch;
 	private Array<Entity> renderQueue;
@@ -23,10 +25,11 @@ public class RenderSystem extends IteratingSystem {
 	private ComponentMapper<PositionComponent> position_mapper;
 	
 	@SuppressWarnings("unchecked")
-	public RenderSystem(Viewport view) {
+	public RenderSystem(VikingGame v_game) {
 		super(Family.getFor(TextureComponent.class, PositionComponent.class));
 		
-		viewport = view;
+		game = v_game;
+		viewport = game.viewport;
 		camera = viewport.getCamera();
 		
 		texture_mapper  = ComponentMapper.getFor(TextureComponent.class);
@@ -45,6 +48,24 @@ public class RenderSystem extends IteratingSystem {
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+		
+		// Render World
+		for(int x = 0; x < game.world.map_heights.length; x++){
+			for(int y = 0; y < game.world.map_heights[x].length; y++){
+				if(game.world.map_heights[x][y] == 0){
+					batch.draw(game.assets.water_deep_region, x * 64, y * 64);
+				}
+				else if (game.world.map_heights[x][y] == 1){
+					batch.draw(game.assets.water_shallow_region, x * 64, y * 64);
+				}
+				else if (game.world.map_heights[x][y] == 2){
+					batch.draw(game.assets.beach_region, x * 64, y * 64);
+				}
+				else if (game.world.map_heights[x][y] == 3){
+					batch.draw(game.assets.grass_region, x * 64, y * 64);
+				}
+			}
+		}
 		
 		// Process batch items
 		for (Entity entity : renderQueue) {
