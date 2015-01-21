@@ -14,8 +14,8 @@ public class GameScreen extends ScreenAdapter {
     private Engine          engine;
     private FPSLogger       fps;
 
-    public GameScreen(VikingGame game) {
-        this.game = game;
+    public GameScreen(VikingGame viking_game) {
+        game = viking_game;
 
         // Create the engine for the Ashley ECS
         engine = new Engine();
@@ -29,16 +29,19 @@ public class GameScreen extends ScreenAdapter {
         }
     }
     
+    // Initializes all the systems
     private void start_systems() {
     	engine.addSystem(new RenderSystem(game));
         engine.addSystem(new MovementSystem());
     }
     
+    // Halts processing of the systems
     private void pause_systems() {
     	engine.getSystem(RenderSystem.class).setProcessing(false);
 		engine.getSystem(MovementSystem.class).setProcessing(false);
     }
     
+    // Resumes processing of halted systems
     private void resume_systems() {
     	engine.getSystem(RenderSystem.class).setProcessing(true);
 		engine.getSystem(MovementSystem.class).setProcessing(true);
@@ -68,8 +71,7 @@ public class GameScreen extends ScreenAdapter {
     
     @Override
     public void resize(int width, int height) {
-        game.camera.update();
-        game.viewport.update(width, height);
+        game.game_viewport.update(width, height);
     }
 
     @Override

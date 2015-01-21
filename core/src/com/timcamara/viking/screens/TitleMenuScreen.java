@@ -9,6 +9,8 @@ public class TitleMenuScreen extends MenuScreen {
     public TitleMenuScreen(VikingGame game) {
 		super(game);
 		
+		createBackground(game.assets.gradient_small);
+		
 		createLabel("Viking");
 
         table.row();

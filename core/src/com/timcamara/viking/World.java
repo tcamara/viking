@@ -8,8 +8,6 @@ public class World {
 	
 	public World() {
 		map_heights = generate_map_heights();
-		
-		VikingGame.print(get_map_dimensions().toString());
 	}
 	
 	public Vector2 get_map_dimensions() {

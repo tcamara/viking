@@ -8,10 +8,13 @@ public class Assets {
 	public AssetManager             asset_manager;
 	public Skin                     skin;
 	public TextureAtlas             atlas;
+	public TextureAtlas             menu_atlas;
 	public TextureAtlas.AtlasRegion water_deep_region;
 	public TextureAtlas.AtlasRegion water_shallow_region;
 	public TextureAtlas.AtlasRegion beach_region;
 	public TextureAtlas.AtlasRegion grass_region;
+	public TextureAtlas.AtlasRegion ship_region;
+	public TextureAtlas.AtlasRegion gradient_small;
 	
 	public Assets() {
 		asset_manager = new AssetManager();
@@ -22,11 +25,16 @@ public class Assets {
 		// Queue up the skin for loading
 		asset_manager.load("ui/uiskin.json", Skin.class);
 		
+		// Queue up the menu background for the loading screen
+		asset_manager.load("images/menu_pack.txt", TextureAtlas.class);
+		
 		// Force finish updating
 		asset_manager.finishLoading();
 		
 		// Store it!
-		skin = asset_manager.get("ui/uiskin.json", Skin.class);
+		skin           = asset_manager.get("ui/uiskin.json", Skin.class);
+		menu_atlas     = asset_manager.get("images/menu_pack.txt", TextureAtlas.class);
+		gradient_small = menu_atlas.findRegion("gradient_small");
 	}
 	
 	// Loads the main set of assets
@@ -42,11 +50,7 @@ public class Assets {
 		water_shallow_region = atlas.findRegion("water_shallow");
 		beach_region         = atlas.findRegion("sand");
 		grass_region         = atlas.findRegion("grass");
-		
-		VikingGame.print(water_deep_region.name);
-		VikingGame.print(water_shallow_region.name);
-		VikingGame.print(beach_region.name);
-		VikingGame.print(grass_region.name);
+		ship_region          = atlas.findRegion("ship");
 	}
 	
 	// Wrapper to make it easier to call the update function for the asset manager

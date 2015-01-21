@@ -25,19 +25,21 @@ public class RenderSystem extends IteratingSystem {
 	private ComponentMapper<PositionComponent> position_mapper;
 	
 	@SuppressWarnings("unchecked")
-	public RenderSystem(VikingGame v_game) {
+	public RenderSystem(VikingGame viking_game) {
+		// Only entities that have a TextureComponent and a PositionComponent will be run through this system
 		super(Family.getFor(TextureComponent.class, PositionComponent.class));
 		
-		game = v_game;
-		viewport = game.viewport;
-		camera = viewport.getCamera();
+		// Get our render-related objects from the main game object to avoid re-instantiating them
+		game     = viking_game;
+		viewport = game.game_viewport;
+		camera   = viewport.getCamera();
+		batch    = game.batch;
 		
+		// Get our component mappers so we can retrieve objects in an efficient manner
 		texture_mapper  = ComponentMapper.getFor(TextureComponent.class);
 		position_mapper = ComponentMapper.getFor(PositionComponent.class);
 		
 		renderQueue = new Array<Entity>();
-		
-		batch = new SpriteBatch();
 	}
 
 	@Override
@@ -53,16 +55,16 @@ public class RenderSystem extends IteratingSystem {
 		for(int x = 0; x < game.world.map_heights.length; x++){
 			for(int y = 0; y < game.world.map_heights[x].length; y++){
 				if(game.world.map_heights[x][y] == 0){
-					batch.draw(game.assets.water_deep_region, x * 64, y * 64);
+					batch.draw(game.assets.water_deep_region, x * VikingGame.pixels_per_meter, y * VikingGame.pixels_per_meter);
 				}
 				else if (game.world.map_heights[x][y] == 1){
-					batch.draw(game.assets.water_shallow_region, x * 64, y * 64);
+					batch.draw(game.assets.water_shallow_region, x * VikingGame.pixels_per_meter, y * VikingGame.pixels_per_meter);
 				}
 				else if (game.world.map_heights[x][y] == 2){
-					batch.draw(game.assets.beach_region, x * 64, y * 64);
+					batch.draw(game.assets.beach_region, x * VikingGame.pixels_per_meter, y * VikingGame.pixels_per_meter);
 				}
 				else if (game.world.map_heights[x][y] == 3){
-					batch.draw(game.assets.grass_region, x * 64, y * 64);
+					batch.draw(game.assets.grass_region, x * VikingGame.pixels_per_meter, y * VikingGame.pixels_per_meter);
 				}
 			}
 		}

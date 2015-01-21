@@ -4,28 +4,35 @@ filter: Linear,Linear
 repeat: none
 water_shallow
   rotate: false
-  xy: 2, 2
+  xy: 77, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
+ship
+  rotate: false
+  xy: 2, 2
+  size: 73, 57
+  orig: 73, 73
+  offset: 0, 9
+  index: -1
 grass
   rotate: false
-  xy: 68, 2
+  xy: 2, 127
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 water_deep
   rotate: false
-  xy: 2, 68
+  xy: 2, 61
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 sand
   rotate: false
-  xy: 2, 134
+  xy: 143, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

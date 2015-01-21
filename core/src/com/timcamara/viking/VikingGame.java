@@ -1,7 +1,7 @@
 package com.timcamara.viking;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.timcamara.viking.screens.GameLossMenuScreen;
@@ -12,21 +12,31 @@ import com.timcamara.viking.screens.LevelWinMenuScreen;
 import com.timcamara.viking.screens.LoadingMenuScreen;
 import com.timcamara.viking.screens.PauseMenuScreen;
 import com.timcamara.viking.screens.TitleMenuScreen;
-import com.timcamara.viking.World;
 
 public class VikingGame extends Game {
 	// Used for debug output
 	public static boolean dev_mode = true;
 	
-	// Camera related variables
-	public static int         screen_width  = 960;
-	public static int         screen_height = 540;
-	public OrthographicCamera camera;
-	public FitViewport        viewport;
+	// Screen dimensions determine the actual pixel size of the game window
+	public static int screen_width  = 1280;
+	public static int screen_height = 720;
+	
+	// World dimensions determine the size of the game world in meters?
+	public static int world_width      = 100;
+	public static int world_height     = 100;
+	public static int pixels_per_meter = 64;
+	
+	// One viewport for menus, one for the game, since they use different camera dimensions
+	public FitViewport game_viewport;
+	public FitViewport menu_viewport;
+	
+	// Stage and SpriteBatch are heavy objects, so only instantiate one of them, and then re-use it
+	public Stage       stage;
+	public SpriteBatch batch;
 	
 	// Screens
-	public TitleMenuScreen     title_screen;
 	public LoadingMenuScreen   loading_screen;
+	public TitleMenuScreen     title_screen;
 	public PauseMenuScreen     pause_screen;
 	public LevelWinMenuScreen  level_win_screen;
 	public LevelLossMenuScreen level_loss_screen;
@@ -34,24 +44,25 @@ public class VikingGame extends Game {
 	public GameLossMenuScreen  game_loss_screen;
 	public GameScreen          game_screen;
 	
-	// This gets re-used for all screens
-	public Stage stage;
-	
-	// This handles loading and storing all of our assets
+	// Handles loading and storing all assets
 	public Assets assets;
 	
+	// Builds and maintains game world state
 	public World world;
 	
 	@Override
 	public void create () {
-		// Initialize the camera and viewport
-		camera   = new OrthographicCamera();
-		viewport = new FitViewport(VikingGame.screen_width, VikingGame.screen_height, camera);
-		viewport.apply(true);
+		// Initialize the menu viewport with screen coordinates
+		menu_viewport = new FitViewport(screen_width, screen_height);
+		
+		// Initialize the game viewport with world dimensions, and center the camera
+		game_viewport = new FitViewport(world_width, world_height);
+		game_viewport.apply(true);
 		
 		// Setup structure for the menu screens
 		assets = new Assets();
-        stage  = new Stage(viewport);
+		batch  = new SpriteBatch();
+        stage  = new Stage(menu_viewport, batch);
         
         // Bootstrap the assets for the loading screen
         assets.load_assets_loading();
